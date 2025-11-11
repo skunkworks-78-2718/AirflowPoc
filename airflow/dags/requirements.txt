@@ -1,0 +1,11 @@
+# This file is used for the dev Docker instance only
+# Requirements in production are managed through the Fabric job
+pandas
+pyyaml
+pyodbc
+sqlalchemy
+looker_sdk
+pysftp
+tenacity
+dbt-sqlserver==1.8.4
+dbt-core

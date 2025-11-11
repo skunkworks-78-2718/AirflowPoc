@@ -1,0 +1,5 @@
+target/
+logs/
+dbt_packages/
+*.pyc
+aci-deployment-scripts/full_logs.txt

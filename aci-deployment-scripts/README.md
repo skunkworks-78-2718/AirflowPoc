@@ -1,0 +1,213 @@
+# Airflow ACI Deployment Scripts
+
+Complete deployment automation for Airflow with ephemeral DBT containers using Azure Container Instances (ACI).
+
+## 📋 What This Deploys
+
+```
+Azure Container Registry (ACR)
+└── airflow:latest (with DAGs baked in)
+└── dbt:latest
+
+Azure Container Instances (ACI):
+├── Scheduler (persistent, runs 24/7)
+└── Webserver (persistent, runs 24/7)
+
+Azure PostgreSQL (Airflow metadata)
+
+Ephemeral ACI:
+└── DBT containers (auto-created by DAGs, auto-deleted after run)
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Azure CLI installed: `az login`
+- Docker installed and running
+- Your Airflow and DBT code ready with Dockerfiles
+
+### Option 1: Run Everything at Once (Fastest)
+
+```bash
+# Make scripts executable
+chmod +x make-executable.sh
+./make-executable.sh
+
+# Deploy everything
+./deploy-all.sh
+```
+
+### Option 2: Step-by-Step (Recommended for Learning)
+
+```bash
+# Make scripts executable
+chmod +x make-executable.sh
+./make-executable.sh
+
+# Run each step
+source 00-set-variables.sh        # Set environment variables
+./01-create-resource-group.sh     # Create resource group
+./02-create-acr.sh                # Create container registry
+./03-create-postgres.sh           # Create PostgreSQL database
+./04-build-push-images.sh         # Build and push images
+./05-deploy-scheduler.sh          # Deploy Airflow scheduler
+./06-deploy-webserver.sh          # Deploy Airflow webserver
+./07-setup-permissions.sh         # Setup managed identity permissions
+```
+
+## 📁 Script Descriptions
+
+| Script | Purpose | Duration |
+|--------|---------|----------|
+| `00-set-variables.sh` | Set environment variables | 1 min |
+| `01-create-resource-group.sh` | Create Azure resource group | 1 min |
+| `02-create-acr.sh` | Create Azure Container Registry | 2 min |
+| `03-create-postgres.sh` | Create PostgreSQL database | 5 min |
+| `04-build-push-images.sh` | Build and push Docker images | 10 min |
+| `05-deploy-scheduler.sh` | Deploy Airflow scheduler as ACI | 2 min |
+| `06-deploy-webserver.sh` | Deploy Airflow webserver as ACI | 2 min |
+| `07-setup-permissions.sh` | Grant permissions for ephemeral ACI | 2 min |
+| `deploy-all.sh` | Run all scripts in sequence | 25 min |
+| `99-cleanup.sh` | Delete all resources | 5 min |
+
+**Total deployment time: ~25-30 minutes**
+
+## 🔧 Configuration
+
+Edit `00-set-variables.sh` to customize:
+
+```bash
+export RESOURCE_GROUP="rg-aci-airflow"      # Your resource group name
+export LOCATION="eastus"                     # Azure region
+export ACR_NAME="acrairflow${RANDOM}"        # Registry name (must be unique)
+export POSTGRES_PASSWORD="ChangeMe123!"      # Database password
+```
+
+## 📦 Required Files
+
+Your project structure should look like:
+
+```
+project/
+├── deployment-scripts/          # These scripts
+│   ├── 00-set-variables.sh
+│   ├── 01-create-resource-group.sh
+│   ├── ...
+│   └── README.md
+├── airflow/
+│   ├── Dockerfile               # Airflow image with DAGs
+│   ├── dags/
+│   │   └── your_dag.py         # With AzureContainerInstancesOperator
+│   ├── plugins/
+│   └── requirements.txt
+└── dbt/
+    ├── Dockerfile               # DBT image
+    ├── models/
+    ├── profiles.yml
+    └── dbt_project.yml
+```
+
+## 🎯 After Deployment
+
+1. **Access Airflow UI**: The URL will be displayed at the end of deployment
+   ```
+   http://<random>.eastus.azurecontainer.io:8080
+   Username: admin
+   Password: admin
+   ```
+
+2. **Enable DAGs**: In the Airflow UI, toggle your DAGs on
+
+3. **Trigger Test Run**: Click "Trigger DAG" and watch it create ephemeral ACI containers!
+
+4. **Monitor**: 
+   ```bash
+   # Watch containers being created/deleted
+   watch -n 2 'az container list --resource-group rg-aci-airflow --output table'
+   
+   # View scheduler logs
+   az container logs --name aci-scheduler --resource-group rg-aci-airflow --follow
+   
+   # View webserver logs
+   az container logs --name aci-webserver --resource-group rg-aci-airflow --follow
+   ```
+
+## 💰 Cost Estimate (2 weeks)
+
+- **ACR**: ~$3
+- **2 ACI containers** (Scheduler + Webserver, 24/7): ~$20
+- **PostgreSQL**: ~$10
+- **Ephemeral ACI** (DBT runs): ~$5
+- **Total**: ~$40 for 2 weeks
+
+## 🔄 Restarting Containers
+
+If a container crashes:
+
+```bash
+# Restart scheduler
+az container restart --name aci-scheduler --resource-group rg-aci-airflow
+
+# Restart webserver
+az container restart --name aci-webserver --resource-group rg-aci-airflow
+```
+
+## 🧹 Cleanup
+
+When finished with POC:
+
+```bash
+./99-cleanup.sh
+```
+
+This deletes the entire resource group and all resources (~5-10 minutes).
+
+## ❓ Troubleshooting
+
+### Can't access Airflow UI?
+Wait 2-3 minutes after deployment completes. Check webserver logs:
+```bash
+az container logs --name aci-webserver --resource-group rg-aci-airflow
+```
+
+### DAGs not showing up?
+Restart scheduler:
+```bash
+az container restart --name aci-scheduler --resource-group rg-aci-airflow
+```
+
+### Ephemeral ACI creation failing?
+Check permissions:
+```bash
+export PRINCIPAL_ID=$(az container show \
+  --name aci-scheduler \
+  --resource-group rg-aci-airflow \
+  --query identity.principalId -o tsv)
+
+az role assignment list --assignee $PRINCIPAL_ID --all
+```
+
+### PostgreSQL connection errors?
+Verify connection string:
+```bash
+source 00-set-variables.sh
+echo $AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+```
+
+## 📚 Next Steps
+
+- [ ] Set up Azure Key Vault for secrets
+- [ ] Configure Azure Monitor alerts
+- [ ] Set up CI/CD with GitHub Actions
+- [ ] Consider Azure Data Factory Managed Airflow for production
+
+## 🤝 Support
+
+For issues or questions:
+1. Check logs: `az container logs --name <container-name> --resource-group <rg-name>`
+2. List resources: `az resource list --resource-group <rg-name> --output table`
+3. Check container status: `az container show --name <container-name> --resource-group <rg-name>`
+
+---
+
+**Happy deploying! 🚀**

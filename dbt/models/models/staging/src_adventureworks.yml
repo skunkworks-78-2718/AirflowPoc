@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: adventureworks
+    schema: SalesLT
+    tables:
+      - name: SalesOrderHeader
+        description: Contains the sales order header information
+      - name: SalesOrderDetail
+        description: Contains the sales order detail line items
+      - name: Customer
+        description: Contains customer information
+
+  - name: adventureworks_production
+    schema: SalesLT
+    tables:
+      - name: Product
+        description: Contains product information
+      - name: ProductSubcategory
+        description: Contains product subcategory information
+
+  - name: adventureworks_person
+    schema: SalesLT
+    tables:
+      - name: Person
+        description: Contains person information

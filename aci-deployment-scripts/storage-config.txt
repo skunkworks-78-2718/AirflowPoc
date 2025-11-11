@@ -1,0 +1,4 @@
+# storage-config.txt
+STORAGE_ACCOUNT=stairflowlogs1762535143
+STORAGE_KEY='B3P4JWyp4bPXWPUuLPcqG5dRfUwYOeURMjUJploSZZmOAKqczRJXo1//vWjTwf38oFA+4yDcFJO9+AStdd7hgw=='
+FILE_SHARE_NAME=airflow-logs

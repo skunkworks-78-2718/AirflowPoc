@@ -1,0 +1,39 @@
+name: Push to ACR
+
+on:
+  workflow_dispatch:
+
+env:
+  ACR_NAME: ${{ secrets.ACR_NAME }}
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Login to ACR
+      run: |
+        az acr login --name ${{ env.ACR_NAME }}
+    
+    - name: Build and Push Airflow
+      run: |
+        docker build -t ${{ env.ACR_NAME }}.azurecr.io/airflow:latest -f airflow/Dockerfile ./airflow
+        docker push ${{ env.ACR_NAME }}.azurecr.io/airflow:latest
+    
+    - name: Build and Push DBT
+      run: |
+        docker build -t ${{ env.ACR_NAME }}.azurecr.io/dbt:latest -f dbt/Dockerfile ./dbt
+        docker push ${{ env.ACR_NAME }}.azurecr.io/dbt:latest
+    
+    - name: Done
+      run: |
+        echo "✅ Images pushed to ACR"
+        echo "Next: Restart your ACI containers to pull new images"

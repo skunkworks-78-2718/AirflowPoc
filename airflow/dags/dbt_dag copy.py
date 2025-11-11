@@ -12,7 +12,7 @@ default_args = {
 }
 
 dag = DAG(
-    dag_id='dbt_transform',
+    dag_id='dbt_transform_2',
     default_args=default_args,
     description='Run dbt models in Azure',
     schedule_interval=None,  # Manual trigger for POC

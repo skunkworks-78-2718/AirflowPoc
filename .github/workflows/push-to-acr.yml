@@ -5,7 +5,7 @@ on:
 
 env:
   ACR_NAME: ${{ secrets.ACR_NAME }}
-
+  RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
 jobs:
   push:
     runs-on: ubuntu-latest

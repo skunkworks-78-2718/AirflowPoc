@@ -12,7 +12,7 @@ default_args = {
 }
 
 dag = DAG(
-    dag_id='dbt_run_specific_model',
+    dag_id='dbt_run_customers',
     default_args=default_args,
     description='Run specific dbt model in Azure',
     schedule_interval=None,  # Manual trigger

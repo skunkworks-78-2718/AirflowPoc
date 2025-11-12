@@ -5,6 +5,7 @@ on:
 
 env:
   ACR_NAME: ${{ secrets.ACR_NAME }}
+  RESOURCE_GROUP: ${{ variables.RESOURCE_GROUP }}
 
 jobs:
   push:

@@ -37,12 +37,12 @@ jobs:
       run: |
         echo "Restarting Airflow containers..."
         az container restart \
-          --name aci-scheduler \
+          --name aci-scheduler3 \
           --resource-group ${{ env.RESOURCE_GROUP }} \
           --no-wait
         
         az container restart \
-          --name aci-webserver \
+          --name aci-webserver3 \
           --resource-group ${{ env.RESOURCE_GROUP }} \
           --no-wait
         

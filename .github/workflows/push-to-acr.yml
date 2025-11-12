@@ -33,7 +33,31 @@ jobs:
         docker build -t ${{ env.ACR_NAME }}.azurecr.io/dbt:latest -f dbt/Dockerfile ./dbt
         docker push ${{ env.ACR_NAME }}.azurecr.io/dbt:latest
     
-    - name: Done
+    - name: Restart ACI Containers
       run: |
-        echo "✅ Images pushed to ACR"
-        echo "Next: Restart your ACI containers to pull new images"
+        echo "Restarting Airflow containers..."
+        az container restart \
+          --name aci-scheduler \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --no-wait
+        
+        az container restart \
+          --name aci-webserver \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --no-wait
+        
+        echo "✅ Containers restarting (takes 1-2 minutes to pull new images)"
+    
+    - name: Deployment Summary
+      run: |
+        echo "### 🚀 Deployment Complete!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Images pushed to ACR:**" >> $GITHUB_STEP_SUMMARY
+        echo "- airflow:latest" >> $GITHUB_STEP_SUMMARY
+        echo "- dbt:latest" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Containers restarted:**" >> $GITHUB_STEP_SUMMARY
+        echo "- aci-scheduler" >> $GITHUB_STEP_SUMMARY
+        echo "- aci-webserver" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Wait 1-2 minutes, then refresh Airflow UI to see changes." >> $GITHUB_STEP_SUMMARY

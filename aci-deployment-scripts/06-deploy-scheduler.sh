@@ -35,7 +35,7 @@ fi
 
 echo "Creating ACI for Scheduler..."
 
-source storage-config.txt
+source configuration.txt
 echo $STORAGE_ACCOUNT
 echo $STORAGE_KEY
 echo $FILE_SHARE_NAME
@@ -97,4 +97,4 @@ echo ""
 echo "View logs:"
 echo "  az container logs --name $ACI_SCHEDULER --resource-group $RESOURCE_GROUP --follow"
 echo ""
-echo "Next: Run ./06-deploy-webserver.sh"
+echo "Next: Run ./07-deploy-webserver.sh"

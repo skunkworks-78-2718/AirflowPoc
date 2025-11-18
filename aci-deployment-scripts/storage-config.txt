@@ -1,4 +1,4 @@
 # storage-config.txt
-STORAGE_ACCOUNT=stairflowlogs1762535143
-STORAGE_KEY='B3P4JWyp4bPXWPUuLPcqG5dRfUwYOeURMjUJploSZZmOAKqczRJXo1//vWjTwf38oFA+4yDcFJO9+AStdd7hgw=='
-FILE_SHARE_NAME=airflow-logs
+STORAGE_ACCOUNT=flexcareairflowlogging
+STORAGE_KEY='BDad5hjDew0lmANY5muj3dne8Mvt61UeYYM4RezomiMFhPE9vqOrPI3DCR6n9AxTG1lqBzQZFP3Z+ASteHYo0w=='
+FILE_SHARE_NAME=flexcareairflowlogs

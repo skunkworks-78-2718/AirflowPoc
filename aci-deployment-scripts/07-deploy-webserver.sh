@@ -35,7 +35,10 @@ fi
 
 echo "Creating ACI for Webserver..."
 
-source storage-config.txt
+source configuration.txt
+echo $STORAGE_ACCOUNT
+echo $STORAGE_KEY
+echo $FILE_SHARE_NAME
 
 az container create \
   --name $ACI_WEBSERVER \
@@ -84,4 +87,4 @@ echo ""
 echo "View logs:"
 echo "  az container logs --name $ACI_WEBSERVER --resource-group $RESOURCE_GROUP --follow"
 echo ""
-echo "Next: Run ./07-setup-permissions.sh"
+echo "Next: Run ./08-setup-permissions.sh"

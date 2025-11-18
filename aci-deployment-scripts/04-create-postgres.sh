@@ -7,6 +7,8 @@ set -e
 
 echo "=== Creating PostgreSQL Flexible Server ==="
 
+source configuration.txt
+
 az postgres flexible-server create \
   --name $POSTGRES_SERVER \
   --resource-group $RESOURCE_GROUP \
@@ -44,4 +46,16 @@ echo ""
 echo "IMPORTANT: Save this connection string:"
 echo "export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=\"$AIRFLOW__DATABASE__SQL_ALCHEMY_CONN\""
 echo ""
-echo "Next: Run ./04-build-push-images.sh"
+echo "Next: Run ./05-build-push-images.sh"
+
+# Save to file for later use
+cat >> configuration.txt <<EOF
+#POSTGRES CREDENTIALS
+POSTGRES_SERVER=$POSTGRES_SERVER
+POSTGRES_HOST=$POSTGRES_HOST
+
+#IMPORTANT: Save this connection string:
+AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=$AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+EOF
+
+echo "✅ Configuration saved to configuration.txt"

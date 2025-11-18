@@ -1,11 +1,10 @@
 #!/bin/bash
 set -e
 
+
+source configuration.txt
 # Variables
-RESOURCE_GROUP="rg-aci-airflow-3-volume-mounts-ghactions"
 LOCATION="eastus"
-STORAGE_ACCOUNT="stairflowlogs$(date +%s)"
-FILE_SHARE_NAME="airflow-logs"
 
 echo "=================================================="
 echo "Creating Storage Account and File Share for Logs"
@@ -38,6 +37,12 @@ STORAGE_KEY=$(az storage account keys list \
   --resource-group $RESOURCE_GROUP \
   --query "[0].value" -o tsv)
 
+
+export STORAGE_ACCOUNT=$STORAGE_ACCOUNT
+export STORAGE_KEY=$STORAGE_KEY
+export FILE_SHARE_NAME=$FILE_SHARE_NAME
+
+
 echo ""
 echo "=================================================="
 echo "✅ Storage Setup Complete!"
@@ -50,10 +55,9 @@ echo "⚠️  SAVE THESE VALUES - You'll need them for container deployment!"
 echo "=================================================="
 
 # Save to file for later use
-cat > storage-config.txt <<EOF
-STORAGE_ACCOUNT=$STORAGE_ACCOUNT
+cat >> configuration.txt <<EOF
+#Storage Account Credentials:
 STORAGE_KEY=$STORAGE_KEY
-FILE_SHARE_NAME=$FILE_SHARE_NAME
 EOF
 
-echo "✅ Configuration saved to storage-config.txt"
+echo "✅ Configuration saved to configuration.txt"

@@ -5,6 +5,8 @@
 
 set -e
 
+source configuration.txt
+
 echo "=== Creating Azure Container Registry ==="
 
 az acr create \
@@ -30,3 +32,12 @@ echo "export ACR_USERNAME=$ACR_USERNAME"
 echo "export ACR_PASSWORD=$ACR_PASSWORD"
 echo ""
 echo "Next: Run ./03-create-postgres.sh"
+
+
+cat >> configuration.txt <<EOF
+#ACR Credentials:
+
+ACR_LOGIN_SERVER=$ACR_LOGIN_SERVER
+ACR_USERNAME=$ACR_USERNAME
+ACR_PASSWORD=$ACR_PASSWORD
+EOF

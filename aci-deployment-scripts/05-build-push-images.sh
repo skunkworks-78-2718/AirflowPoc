@@ -7,7 +7,7 @@
 #   3. Have Dockerfiles ready in ../airflow and ../dbt directories
 
 set -e
-
+source configuration.txt
 echo "=== Building and Pushing Docker Images ==="
 
 # Check if ACR_LOGIN_SERVER is set
@@ -50,4 +50,4 @@ echo "Images available:"
 echo "  ${ACR_LOGIN_SERVER}/airflow:latest"
 echo "  ${ACR_LOGIN_SERVER}/dbt:latest"
 echo ""
-echo "Next: Run ./05-deploy-scheduler.sh"
+echo "Next: Run ./06-deploy-scheduler.sh"

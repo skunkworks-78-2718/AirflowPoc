@@ -5,6 +5,8 @@
 
 set -e
 
+source configuration.txt
+
 echo "=== Creating Resource Group ==="
 
 az group create \

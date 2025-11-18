@@ -1,0 +1,36 @@
+RESOURCE_GROUP=rg-aci-airflow-testdeployment3
+LOCATION=eastus
+ACR_NAME=acrairflowflextestdeployment3
+SUBSCRIPTION_ID=806f08eb-d87e-45b7-b587-168e449632f8
+
+#Storage Account Settings
+STORAGE_ACCOUNT=flexcareairflowlogging
+FILE_SHARE_NAME=flexcareairflowlogs
+
+# PostgreSQL settings
+POSTGRES_USER=airflow
+POSTGRES_PASSWORD=ChangeMe123
+POSTGRES_DB=airflow
+
+# Container names
+ACI_SCHEDULER=aci-scheduler-testdeployment3
+ACI_WEBSERVER=aci-webserver-testdeployment3
+
+# Get subscription ID
+SUBSCRIPTION_ID=806f08eb-d87e-45b7-b587-168e449632f8
+
+# Generate Fernet key
+FERNET_KEY=kZ9vN2Qp8R5mT1wX4yU6vZ0aB2cD3eF4gH5iJ6kL7m8=
+#ACR Credentials:
+
+ACR_LOGIN_SERVER=acrairflowflextestdeployment3.azurecr.io
+ACR_USERNAME=acrairflowflextestdeployment3
+ACR_PASSWORD=PM6g2BIyB88mNCJFNKbbeNTqwaRWmdIzvQ/uY9yGiU+ACRCLkcMP
+#Storage Account Credentials:
+STORAGE_KEY=CjorKc7qZehfYBCz9t/noIyHzxlbUcaopUx8Rw7M3NHOSl5zhCFwbCcBMe9LB7kZ+ipMp3ow7xOF+AStML4YBQ==
+#POSTGRES CREDENTIALS
+POSTGRES_SERVER=pg-airflow-testdeployment3
+POSTGRES_HOST=pg-airflow-testdeployment3.postgres.database.azure.com
+
+#IMPORTANT: Save this connection string:
+AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:ChangeMe123@pg-airflow-testdeployment3.postgres.database.azure.com:5432/airflow

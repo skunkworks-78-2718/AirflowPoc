@@ -1,4 +1,0 @@
-# storage-config.txt
-STORAGE_ACCOUNT=flexcareairflowlogging
-STORAGE_KEY='BDad5hjDew0lmANY5muj3dne8Mvt61UeYYM4RezomiMFhPE9vqOrPI3DCR6n9AxTG1lqBzQZFP3Z+ASteHYo0w=='
-FILE_SHARE_NAME=flexcareairflowlogs

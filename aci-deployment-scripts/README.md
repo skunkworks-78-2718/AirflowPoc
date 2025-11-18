@@ -55,7 +55,7 @@ bash 07-deploy-webserver.sh                           # Deploy Airflow webserver
 | `00-set-variables.sh` | Set environment variables | 1 min |
 | `01-create-resource-group.sh` | Create Azure resource group | 1 min |
 | `02-create-acr.sh` | Create Azure Container Registry | 2 min |
-| `bash 03-create-storage-account-fileshare.sh` | Create storage account and file share | 2 min |
+| `03-create-storage-account-fileshare.sh` | Create storage account and file share | 2 min |
 | `04-create-postgres.sh` | Create PostgreSQL database | 5 min |
 | `05-build-push-images.sh` | Build and push Docker images | 10 min |
 | `06-deploy-scheduler.sh` | Deploy Airflow scheduler as ACI | 2 min |

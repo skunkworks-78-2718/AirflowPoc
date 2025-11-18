@@ -33,6 +33,8 @@ Ephemeral ACI:
 cd aci-deployment-scripts
 bash deploy-all.sh
 
+If you have to restart there is a configurations.txt file that gets created in the deployment process. Delete this file before starting over.
+
 ### Option 2: Step-by-Step (Recommended for Learning)
 
 ```bash

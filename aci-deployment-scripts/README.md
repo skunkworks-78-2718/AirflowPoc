@@ -23,36 +23,29 @@ Ephemeral ACI:
 
 ### Prerequisites
 - Azure CLI installed: `az login`
+- GIT bash
 - Docker installed and running
 - Your Airflow and DBT code ready with Dockerfiles
+- Recommend VS Code (run as Admin)
 
 ### Option 1: Run Everything at Once (Fastest)
 
-```bash
-# Make scripts executable
-chmod +x make-executable.sh
-./make-executable.sh
-
-# Deploy everything
-./deploy-all.sh
-```
+cd aci-deployment-scripts
+bash deploy-all.sh
 
 ### Option 2: Step-by-Step (Recommended for Learning)
 
 ```bash
-# Make scripts executable
-chmod +x make-executable.sh
-./make-executable.sh
 
 # Run each step
-source 00-set-variables.sh        # Set environment variables
-./01-create-resource-group.sh     # Create resource group
-./02-create-acr.sh                # Create container registry
-./03-create-postgres.sh           # Create PostgreSQL database
-./04-build-push-images.sh         # Build and push images
-./05-deploy-scheduler.sh          # Deploy Airflow scheduler
-./06-deploy-webserver.sh          # Deploy Airflow webserver
-./07-setup-permissions.sh         # Setup managed identity permissions
+source 00-set-variables.sh                            # Set environment variables
+bash 01-create-resource-group.sh                      # Create resource group
+bash 02-create-acr.sh                                 # Create container registry
+bash 03-create-storage-account-fileshare.sh           # Create container registry
+bash 04-create-postgres.sh                            # Create PostgreSQL database
+bash 05-build-push-images.sh                          # Build and push images
+bash 06-deploy-scheduler.sh                           # Deploy Airflow scheduler
+bash 07-deploy-webserver.sh                           # Deploy Airflow webserver
 ```
 
 ## 📁 Script Descriptions
@@ -62,17 +55,19 @@ source 00-set-variables.sh        # Set environment variables
 | `00-set-variables.sh` | Set environment variables | 1 min |
 | `01-create-resource-group.sh` | Create Azure resource group | 1 min |
 | `02-create-acr.sh` | Create Azure Container Registry | 2 min |
-| `03-create-postgres.sh` | Create PostgreSQL database | 5 min |
-| `04-build-push-images.sh` | Build and push Docker images | 10 min |
-| `05-deploy-scheduler.sh` | Deploy Airflow scheduler as ACI | 2 min |
-| `06-deploy-webserver.sh` | Deploy Airflow webserver as ACI | 2 min |
-| `07-setup-permissions.sh` | Grant permissions for ephemeral ACI | 2 min |
-| `deploy-all.sh` | Run all scripts in sequence | 25 min |
-| `99-cleanup.sh` | Delete all resources | 5 min |
+| `04-create-postgres.sh` | Create PostgreSQL database | 5 min |
+| `05-build-push-images.sh` | Build and push Docker images | 10 min |
+| `06-deploy-scheduler.sh` | Deploy Airflow scheduler as ACI | 2 min |
+| `07-deploy-webserver.sh` | Deploy Airflow webserver as ACI | 2 min |
+
+
+
 
 **Total deployment time: ~25-30 minutes**
 
 ## 🔧 Configuration
+
+## Don't adjust this I have it all set to be able to run from start. This will be easiest.
 
 Edit `00-set-variables.sh` to customize:
 
@@ -107,7 +102,48 @@ project/
     └── dbt_project.yml
 ```
 
+### SET PERMISSIONS IN AZURE PORTAL
+Azure Permissions setup in Portal
+Need the following permissions
+
+## Scheduler has Contributor on Resource Group
+## Scheduler has AcrPull on ACR
+## Webserver has AcrPull on ACR
+
+## Step 1: Grant Contributor to Scheduler
+    1. Go to Resource Groups → rg-aci-airflow-testdeployment3
+    2. Click Access control (IAM)
+    3. Click + Add → Add role assignment
+    4. Select Contributor role → Next
+    5. Click + Select members
+    6. Search for aci-scheduler-testdeployment3
+    7. Select it → Review + assign
+
+## Step 2: Grant AcrPull to Scheduler
+    1. Go to Container registries → Your ACR (e.g., acrairflow320814)
+    2. Click Access control (IAM)
+    3. Click + Add → Add role assignment
+    4. Select AcrPull role → Next
+    5. Click + Select members
+    6. Search for aci-scheduler-testdeployment3
+    7. Select it → Review + assign
+
+## Step 3: Grant AcrPull to Webserver
+    1. Same ACR → Access control (IAM)
+    2. Click + Add → Add role assignment
+    3. Select AcrPull role → Next
+    4. Click + Select members
+    5. Search for aci-webserver-testdeployment3
+    6. Select it → Review + assign
+
+### ADD Connections in Airflow UI
+
+## 1. acr_default
+
+<img width="2439" height="915" alt="image" src="https://github.com/user-attachments/assets/9c6761c0-25bb-48dc-a778-1a8bea281fb5" />
+
 ## 🎯 After Deployment
+
 
 1. **Access Airflow UI**: The URL will be displayed at the end of deployment
    ```

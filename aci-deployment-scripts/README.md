@@ -72,9 +72,9 @@ bash 07-deploy-webserver.sh                           # Deploy Airflow webserver
 Azure Permissions setup in Portal
 Need the following permissions
 
-## Scheduler has Contributor on Resource Group
-## Scheduler has AcrPull on ACR
-## Webserver has AcrPull on ACR
+# Scheduler needs Contributor on Resource Group
+# Scheduler needs AcrPull on ACR
+# Webserver needs AcrPull on ACR
 
 ## Step 1: Grant Contributor to Scheduler
     1. Go to Resource Groups → rg-aci-airflow-testdeployment3

@@ -41,7 +41,7 @@ bash deploy-all.sh
 source 00-set-variables.sh                            # Set environment variables
 bash 01-create-resource-group.sh                      # Create resource group
 bash 02-create-acr.sh                                 # Create container registry
-bash 03-create-storage-account-fileshare.sh           # Create container registry
+bash 03-create-storage-account-fileshare.sh           # Create storage account and file share
 bash 04-create-postgres.sh                            # Create PostgreSQL database
 bash 05-build-push-images.sh                          # Build and push images
 bash 06-deploy-scheduler.sh                           # Deploy Airflow scheduler
@@ -55,6 +55,7 @@ bash 07-deploy-webserver.sh                           # Deploy Airflow webserver
 | `00-set-variables.sh` | Set environment variables | 1 min |
 | `01-create-resource-group.sh` | Create Azure resource group | 1 min |
 | `02-create-acr.sh` | Create Azure Container Registry | 2 min |
+| `bash 03-create-storage-account-fileshare.sh` | Create storage account and file share | 2 min |
 | `04-create-postgres.sh` | Create PostgreSQL database | 5 min |
 | `05-build-push-images.sh` | Build and push Docker images | 10 min |
 | `06-deploy-scheduler.sh` | Deploy Airflow scheduler as ACI | 2 min |
@@ -66,41 +67,6 @@ bash 07-deploy-webserver.sh                           # Deploy Airflow webserver
 **Total deployment time: ~25-30 minutes**
 
 ## 🔧 Configuration
-
-## Don't adjust this I have it all set to be able to run from start. This will be easiest.
-
-Edit `00-set-variables.sh` to customize:
-
-```bash
-export RESOURCE_GROUP="rg-aci-airflow"      # Your resource group name
-export LOCATION="eastus"                     # Azure region
-export ACR_NAME="acrairflow${RANDOM}"        # Registry name (must be unique)
-export POSTGRES_PASSWORD="ChangeMe123!"      # Database password
-```
-
-## 📦 Required Files
-
-Your project structure should look like:
-
-```
-project/
-├── deployment-scripts/          # These scripts
-│   ├── 00-set-variables.sh
-│   ├── 01-create-resource-group.sh
-│   ├── ...
-│   └── README.md
-├── airflow/
-│   ├── Dockerfile               # Airflow image with DAGs
-│   ├── dags/
-│   │   └── your_dag.py         # With AzureContainerInstancesOperator
-│   ├── plugins/
-│   └── requirements.txt
-└── dbt/
-    ├── Dockerfile               # DBT image
-    ├── models/
-    ├── profiles.yml
-    └── dbt_project.yml
-```
 
 ### SET PERMISSIONS IN AZURE PORTAL
 Azure Permissions setup in Portal
@@ -141,6 +107,49 @@ Need the following permissions
 ## 1. acr_default
 
 <img width="2439" height="915" alt="image" src="https://github.com/user-attachments/assets/9c6761c0-25bb-48dc-a778-1a8bea281fb5" />
+
+## 2. azure_default
+
+In the below step highlighted by the screenshot you can run the following command to get the Principal_id which in this case is the Client_ID.
+
+az container show \ --name aci-scheduler-testdeployment3 \ --resource-group rg-aci-airflow-testdeployment3 \ --query identity -o json
+
+<img width="1812" height="1097" alt="image" src="https://github.com/user-attachments/assets/837ea955-fa1d-43f1-91ab-178b96c64900" />
+
+## Don't adjust this I have it all set to be able to run from start. This will be easiest.
+
+Edit `00-set-variables.sh` to customize:
+
+```bash
+export RESOURCE_GROUP="rg-aci-airflow"      # Your resource group name
+export LOCATION="eastus"                     # Azure region
+export ACR_NAME="acrairflow${RANDOM}"        # Registry name (must be unique)
+export POSTGRES_PASSWORD="ChangeMe123!"      # Database password
+```
+
+## 📦 Required Files
+
+Your project structure should look like:
+
+```
+project/
+├── deployment-scripts/          # These scripts
+│   ├── 00-set-variables.sh
+│   ├── 01-create-resource-group.sh
+│   ├── ...
+│   └── README.md
+├── airflow/
+│   ├── Dockerfile               # Airflow image with DAGs
+│   ├── dags/
+│   │   └── your_dag.py         # With AzureContainerInstancesOperator
+│   ├── plugins/
+│   └── requirements.txt
+└── dbt/
+    ├── Dockerfile               # DBT image
+    ├── models/
+    ├── profiles.yml
+    └── dbt_project.yml
+```
 
 ## 🎯 After Deployment
 

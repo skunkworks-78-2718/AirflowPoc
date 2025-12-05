@@ -30,7 +30,7 @@ jobs:
     
     - name: Build and Push DBT
       run: |
-        docker build --build-arg DBT_PASSWORD="${{ secrets.DBT_PASSWORD }}" -t ${{ env.ACR_NAME }}.azurecr.io/dbt:latest -f dbt/Dockerfile ./dbt
+        docker build --build-arg DBT_PASSWORD="${{ secrets.DBT_PASSWORD }}" --build-arg DB_SERVER="${{ vars.DB_SERVER }}" --build-arg DB_SCHEMA="${{ vars.DB_SCHEMA }}" --build-arg DB_USER="${{ vars.DB_USER }}" -t ${{ env.ACR_NAME }}.azurecr.io/dbt:latest -f dbt/Dockerfile ./dbt
         docker push ${{ env.ACR_NAME }}.azurecr.io/dbt:latest
     
     - name: Restart ACI Containers

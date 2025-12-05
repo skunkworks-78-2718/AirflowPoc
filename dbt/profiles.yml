@@ -4,11 +4,11 @@ dbt_airflow_project:
     dev:
       type: sqlserver
       driver: 'ODBC Driver 18 for SQL Server'
-      server: sql-adventureworks-11996.database.windows.net
+      server: "{{ env_var('DB_SERVER') }}"
       port: 1433
       database: AdventureWorksLT
-      schema: SalesLT
-      user: sqladmin
+      schema: "{{ env_var('DB_SCHEMA') }}"
+      user: "{{ env_var('DB_USER') }}"
       password: "{{ env_var('DBT_PASSWORD') }}"
       windows_login: False
       encrypt: False

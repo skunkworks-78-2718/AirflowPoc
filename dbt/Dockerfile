@@ -2,6 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /dbt
 
+ARG DBT_PASSWORD
+ENV DBT_PASSWORD=${DBT_PASSWORD}
+
 USER root
 
 # Install ODBC driver for SQL Server

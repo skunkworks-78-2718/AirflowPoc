@@ -9,7 +9,7 @@ dbt_airflow_project:
       database: AdventureWorksLT
       schema: SalesLT
       user: sqladmin
-      password: 'AdventureWorks2025!'
+      password: "{{ env_var('DBT_PASSWORD') }}"
       windows_login: False
       encrypt: False
       trust_cert: True

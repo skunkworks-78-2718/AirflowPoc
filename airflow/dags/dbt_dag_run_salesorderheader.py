@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from airflow import DAG
-from airflow.providers.microsoft.azure.operators.container_instances import AzureContainerInstancesOperator
 from azure.mgmt.containerinstance.models import ContainerGroupIdentity
+from custom_operators import AzureContainerInstancesWithIdentityOperator
 
 default_args = {
     'owner': 'airflow',
@@ -16,14 +16,13 @@ dag = DAG(
     dag_id='dbt_run_salesorderheader',
     default_args=default_args,
     description='Run specific dbt model in Azure',
-    schedule_interval=None,  # Manual trigger
+    schedule_interval=None,
     start_date=datetime(2025, 1, 1),
     catchup=False,
     tags=['dbt', 'azure', 'single-model'],
 )
 
-# Run a specific model - change 'my_model_name' to your actual model name
-dbt_run_model = AzureContainerInstancesOperator(
+dbt_run_model = AzureContainerInstancesWithIdentityOperator(
     task_id='dbt_run_my_model',
     ci_conn_id='azure_default',
     registry_conn_id='acr_default',
@@ -31,7 +30,7 @@ dbt_run_model = AzureContainerInstancesOperator(
     name='dbt-run-{{ ts_nodash | lower }}',
     image='acrairflow320814.azurecr.io/dbt:latest',
     region='eastus',
-    command=['dbt', 'run', '--debug', '--select', 'stg_salesorderheader'],  # ← Specific model
+    command=['dbt', 'run', '--debug', '--select', 'stg_salesorderheader'],
     cpu=1.0,
     memory_in_gb=2.0,
     identity=ContainerGroupIdentity(

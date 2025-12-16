@@ -11,7 +11,7 @@ dbt_airflow_project:
       authentication: ActiveDirectoryMsi
       client_id: 2eab523c-7a3e-4816-a9b0-86b662fb20e9
       windows_login: False
-      encrypt: False
+      encrypt: True
       trust_cert: True
       threads: 4  # Number of concurrent operations
       timeout_seconds: 300  # Query timeout in seconds

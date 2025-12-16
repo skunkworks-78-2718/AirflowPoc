@@ -8,8 +8,8 @@ dbt_airflow_project:
       port: 1433
       database: AdventureWorksLT
       schema: "{{ env_var('DB_SCHEMA') }}"
-      user: "{{ env_var('DB_USER') }}"
-      password: "{{ env_var('DBT_PASSWORD') }}"
+      authentication: ActiveDirectoryMsi
+      client_id: 2eab523c-7a3e-4816-a9b0-86b662fb20e9
       windows_login: False
       encrypt: False
       trust_cert: True

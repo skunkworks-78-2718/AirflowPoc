@@ -32,5 +32,11 @@ dbt_run = AzureContainerInstancesOperator(
     command=['dbt', 'run', '--debug'],
     cpu=1.0,
     memory_in_gb=2.0,
+    identity=ContainerGroupIdentity(
+        type="UserAssigned",
+        user_assigned_identities={
+            "/subscriptions/806f08eb-d87e-45b7-b587-168e449632f8/resourcegroups/rg-aci-airflow-3-volume-mounts-ghactions/providers/Microsoft.ManagedIdentity/userAssignedIdentities/dbt-container-identity": {}
+        }
+    ),
     dag=dag
 )

@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.microsoft.azure.operators.container_instances import AzureContainerInstancesOperator
+from azure.mgmt.containerinstance.models import ContainerGroupIdentity
 
 default_args = {
     'owner': 'airflow',

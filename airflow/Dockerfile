@@ -20,7 +20,7 @@ USER airflow
 
 # Install Azure providers (NOT docker provider)
 RUN pip install --no-cache-dir \
-    apache-airflow-providers-microsoft-azure==8.4.0 \
+    apache-airflow-providers-microsoft-azure==10.0.0 \
     azure-identity==1.15.0 \
     azure-mgmt-containerinstance==10.1.0
 

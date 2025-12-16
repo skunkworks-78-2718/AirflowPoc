@@ -16,7 +16,6 @@ dbt_airflow_project:
       threads: 4  # Number of concurrent operations
       timeout_seconds: 300  # Query timeout in seconds
       retries: 3  # Number of retries for failed operations
-      authentication: sql  # Explicitly specify SQL authentication
       keepalives_idle: 0  # Disable keepalive to prevent connection issues
       application_name: dbt_airflow_project  # Identify the application in SQL Server
       retry_on_error: True  # Enable automatic retries on transient errors 

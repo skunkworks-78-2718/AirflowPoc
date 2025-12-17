@@ -6,7 +6,24 @@ class AzureContainerInstancesWithIdentityOperator(AzureContainerInstancesOperato
         super().__init__(**kwargs)
         self.identity = identity
 
-    def _create_container_group(self, *args, **kwargs):
-        container_group = super()._create_container_group(*args, **kwargs)
-        container_group.identity = self.identity
-        return container_group
+    def execute(self, context):
+        from airflow.providers.microsoft.azure.hooks.container_instance import AzureContainerInstanceHook
+        
+        # Store original method
+        original_create_or_update = AzureContainerInstanceHook.create_or_update
+        identity = self.identity
+        
+        # Patch to inject identity
+        def patched_create_or_update(self_hook, resource_group, name, container_group):
+            if identity:
+                container_group.identity = identity
+            return original_create_or_update(self_hook, resource_group, name, container_group)
+        
+        # Apply patch
+        AzureContainerInstanceHook.create_or_update = patched_create_or_update
+        
+        try:
+            return super().execute(context)
+        finally:
+            # Restore original
+            AzureContainerInstanceHook.create_or_update = original_create_or_update
